@@ -17,6 +17,8 @@ namespace lab10
 {
     public partial class Form1 : Form
     {
+        private Image original;
+
         public static Image resizeImage(Image imgToResize, Size size)
         {
             return (Image)(new Bitmap(imgToResize, size));
@@ -24,28 +26,18 @@ namespace lab10
         public Form1()
         {
             InitializeComponent();
+            original = pictureBox1.Image;
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        public void Form1_Load(object sender, EventArgs e)
         {
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             Bitmap bmp = (Bitmap)pictureBox1.Image;
-
-            /*
-            double sigma = 5;
-            int kernel = 15;
-            */
-            int[,] kernel =
-            {
-                {0, -1, 0},
-                {-1, 5, -1},
-                {0, -1, 0}
-            };
-
-            IFilter filter = new Convolution(kernel);
+            BilateralSmoothing filter = new BilateralSmoothing();
             pictureBox1.Image = filter.Apply(bmp);
         }
 
@@ -113,6 +105,25 @@ namespace lab10
         private void textBox4_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            pictureBox1.Image = original;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            // open file dialog   
+            OpenFileDialog open = new OpenFileDialog();
+            // image filters  
+            open.Filter = "Image Files(*.jpg; *.jpeg; *.gif; *.bmp)|*.jpg; *.jpeg; *.gif; *.bmp";
+            if (open.ShowDialog() == DialogResult.OK)
+            {
+                // display image in picture box  
+                pictureBox1.Image = new Bitmap(open.FileName);
+                // image file path  
+            }
         }
     }
 }
